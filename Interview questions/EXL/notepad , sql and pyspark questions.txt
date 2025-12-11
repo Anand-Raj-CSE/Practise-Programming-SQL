@@ -1,0 +1,30 @@
+orders - order_id ,cust_id , order_dtm, amt
+cust - cust_id , cust_name
+top 3 customers by total amount spent
+
+
+with cte as(
+Select c.cust_id as c_id, c.cust_name as c_name, o.order_id  , o.order_dtm, o.amt from order o join cust c on c.cust_id = o.cust_id 
+),
+cte1 as(
+Select c_id ,c_name, sum(amt) as total_spent from cte group by (c_id ,c_name)
+)
+
+Select c_id ,c_name, total_spent , dense_rank() over (partition by c_id order by total_spent desc) as dr 
+from cte 1 where dr <= 3
+
+
+
+---------------------
+df_orders - order_id, status, updated_ts ;
+multiple rows per order id
+query to fetch latest row per order id , --- updated_ts
+
+
+from pyspark.sql.functions import Windows
+import pyspark.sql.functions as F
+
+window_spec = Winodws.partitionBy("order_id").OrderBy("updated_ts",desc)
+df_latest_row = df_orders.withColumn("latest_order",dense_rank() over(window_spec))\
+.filter(col("latest_order")=1)
+

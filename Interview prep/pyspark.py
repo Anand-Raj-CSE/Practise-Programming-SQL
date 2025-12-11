@@ -106,7 +106,7 @@ ranked_df = df.withColumn('Ranked_col',dense_rank().over(window_sf).partitionBy(
 ranked_df.show()
 #Corrected code
 window_spec = Window.partitionBy('customer_id').orderBy(Desc('amount'))
-ranked_df = orders.withColumn('ranked_col',dense_rang().over()window_spec)
+ranked_df = orders.withColumn('ranked_col',dense_rang().over(window_spec))
 ranked_df.show()
 """
 Task 10: Remove duplicates

@@ -1,0 +1,75 @@
+data = [
+    ("u1", "2025-12-03 09:00:00", "login",3),
+    ("u1", "2025-12-03 12:30:00", "logout",),
+    ("u1", "2025-12-03 13:30:00", "login",),
+    ("u1", "2025-12-03 18:00:00", "logout"),
+    ("u2", "2025-12-03 10:00:00", "login"),
+    ("u2", "2025-12-03 15:45:00", "logout"),
+]
+
+from pyspark.sql.function import windows
+import pyspark.sql.function  as F
+
+window_sf = window.partitionBy(col"user_id","logIn").orderBy("time")
+
+df = df.withColumns("total_time",(sum((F.col("logout")-(sum(F.col("login")).over(window_sf))
+
+ ("u1", "2025-12-03 09:00:00", "login",3),("u1", "2025-12-03 13:30:00", "login",5.30), - ---- 3.30 +4.5 =  
+    ("u1", "2025-12-03 12:30:00", "logout",3), ("u1", "2025-12-03 18:00:00", "logout",5.30),
+    ("u1", "2025-12-03 13:30:00", "login",5.30),
+    ("u1", "2025-12-03 18:00:00", "logout",5.30),
+
+
+df = df.withColumns("total_time",(sum((F.col("logout")-(sum(F.col("login")).over(window_sf))
+
+
+df = df.withColumns("total_time_that_day",(lead(col("time").over(window_sf))-col("time")
+
+df = df.withColumns("total_time",(sum((F.col("logout")-(sum(F.col("login")).over(window_sf))
+
+
+/--------------------------------------
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
+
+spark = SparkSession.builder.getOrCreate()
+
+data = [
+    ("u1", "2025-12-03 09:00:00", "login"),
+    ("u1", "2025-12-03 12:30:00", "logout"),
+    ("u1", "2025-12-03 13:30:00", "login"),
+    ("u1", "2025-12-03 18:00:00", "logout"),
+    ("u2", "2025-12-03 10:00:00", "login"),
+    ("u2", "2025-12-03 15:45:00", "logout"),
+]
+
+schema = ["user", "ts", "action"]
+df = spark.createDataFrame(data, schema)
+
+# Convert timestamp string to actual timestamp
+df = df.withColumn("ts", to_timestamp("ts"))
+
+# Use lead() to get the next timestamp
+window_spec = Window.partitionBy("user").orderBy("ts")
+
+df2 = (
+    df.withColumn("next_ts", lead("ts").over(window_spec))
+      .withColumn("duration_sec",
+                  when(col("action") == "login",
+                       unix_timestamp("next_ts") - unix_timestamp("ts"))
+                  .otherwise(None))
+)
+
+# Final total duration per user
+result = (
+    df2.groupBy("user")
+       .agg(sum("duration_sec").alias("total_seconds"))
+       .withColumn("total_hours", round(col("total_seconds") / 3600, 2))
+)
+
+result.show(truncate=False)
+
+
+
