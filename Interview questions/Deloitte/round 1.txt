@@ -1,0 +1,40 @@
+data = [
+
+{"customer_id": "C001", "name": "Alice Johnson", "emails": ["alice.j@example.com", "a.johnson@workmail.com"], "signup_date": "2023-05-21", "country": "USA"},
+
+{"customer_id": "C002", "name": None, "emails": ["bobsmith@gmail.com"], "signup_date": "2022-11-15", "country": "Canada"},
+
+{"customer_id": "C003", "name": "Carlos Rivera", "emails": ["carlos.r@correo.mx", "c.rivera@workmail.com"], "signup_date": None, "country": "Mexico"},
+
+{"customer_id": "C004", "name": "Diana Chen", "emails": ["diana.chen@gmail.com"], "signup_date": "2023-08-10", "country": "China"},
+
+{"customer_id": "C005", "name": "Ethan Patel", "emails": ["ethan.patel@hotmail.com"], "signup_date": "2024-01-19", "country": "India"},
+
+{"customer_id": "C006", "name": "Nikolai Ivanov", "emails": ["nikolai.i@rmail.ru"], "signup_date": None, "country": "Russia"},
+
+{"customer_id": "C007", "name": "George Brown", "emails": ["george.b@gmail.com"], "signup_date": "2022-12-22", "country": "UK"},
+
+{"customer_id": "C008", "name": "Hiro Tanaka", "emails": ["hiro.t@jp.com"], "signup_date": "2023-07-30", "country": "Japan"},
+
+{"customer_id": "C009", "name": "Isabella Rossi", "emails": ["i.rossi@italymail.it"], "signup_date": None, "country": "Italy"},
+
+{"customer_id": "C010", "name": "John Doe", "emails": ["john.doe@example.com", "jd@doemail.com"], "signup_date": "2023-09-01", "country": "USA"}
+
+]
+ 
+---2023-01-01 , get all customers from USA
+df = df.withColumn('signup after',df.filter(col("country")=="USA") and \
+col("signup_date")>=datetime("2023-01-01") )
+
+df = df.replaceNULL(col("name"))
+df.na.drop() ---- for rows , it would drop
+
+----second highest salary
+with cte as(
+Select emp_id , name ,dept ,  dense_rank() over(partition by dept order by salary desc) as dr from emp
+)
+
+Select emp_id ,dept , name from cte where dr = 2 
+
+
+
