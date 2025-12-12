@@ -1,0 +1,79 @@
+a = "aaabbcdeefab"
+
+----- return the count of each character
+my_dict = {}
+for i in a:
+	if i in my_dict.keys():
+		my_dict[i] +=1
+	else:
+		my_dict.append(i,1) 
+for i in my_dict.keys():
+	print(f"{i} appeared {my_dict[i]} times."
+
+
+-----------------------
+lst = [10,20,20,30,40,90,80,20]
+--- 3 occurence and 1 occurence should i,
+
+def Occ(l,target):
+	occ = 0
+	n=len(l)
+	for i in range(len(l)):
+		if l[i] == target:
+			occ += 1
+	return occ
+
+def concurrent(l,target):
+	n=len(l)
+	for i in range(n-1):
+		if l[i]==l[i+1]
+			return True
+
+for i in l:	
+	occ = Occ(l,i)
+	isCurr = concurrent(l,i)
+	if occ>=3 and isCurr:
+		print(i)
+
+
+-----master node - driver program - sparkcontext - 
+-cluster manager - yarn , local , kubernetes
+executors - CPUs that do in Memory 
+jobs-> stages-> tasks
+DAG-
+---------------
+
+,cust_is, name,
+
+sum(amt) over(partition by dept orderyb
+
+-----EMP ,joining duplicates , 
+with cte as (
+Select emp_id , emp_name , dense_rank() over(joining date desc) as dr from EMP
+)
+
+DELETE FROM EMP where 
+(Select emp_id , emp_name , joining_dtm from cte where dr>=2)
+
+Delete From EMP where 
+(Select emp_id , emp_name , joining_dtm from EMP group by (emp_id) having count(*) > 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
