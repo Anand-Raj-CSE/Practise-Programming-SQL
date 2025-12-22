@@ -1,0 +1,21 @@
+-----read the csv
+from pysparl.sql import SparkSession
+
+
+df = spark.read.csv('abfss://stoirage@container.core.windows.net/folder/file.csv').option('header',True)\
+.option("inferschema" = True)
+
+df.write.partitionBy('Year').parquet('abfss://stoirage@container.core.windows.net/output/')
+
+-----SQL
+A - 101 , 102 , 103 , NULL , 103
+B - 101 , 102 , 103 , 104 , NULL
+
+
+A inner join B on 
+A    A	 A   A   B   B    B
+101 102 103 103 101 102 103 
+
+offset 4 limit 1 
+
+Select emp_id , na

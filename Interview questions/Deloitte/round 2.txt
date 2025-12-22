@@ -1,0 +1,78 @@
+----A 
+1
+1
+1
+1
+ 
+B
+1
+1
+---left join
+A - 1 , 1 , 1 , 1
+B- 1,1
+ 
+ 
+ Select A.cust_id , B left join A - 8  
+ A join B
+		   B B 		
+ A 1 1 1 1 1 1
+ A 1 1 1 1 1 1
+ A 1 1 1 1 1 1
+ A 1 1 1 1 1 1
+ 
+ B left join A
+     A A A A
+ B 1 1 1 1 1 
+ B 1 1 1 1 1
+ 
+ 
+ ----------------------------------------
+ 
+ emp_id,  Name,   Dept_id, Salary
+1         Teja     1      1000
+2         Poojitha 1      1000
+3         Sarang   2      2000
+4         Amod     3      5000
+5         Debayan  2      3000
+6         Sourabh  4      500
+ 
+question : write a query to get emp_id, name and dept id having highest salary
+2. identify employees and dept having same salary
+3. employee with lowest salary 
+ 
+ 
+with cte as (
+Select  emp_id, Name, Dept_id , Salary , dense_rank() over 
+			(partition by dept_id order by Salary desc) as dr from Emp
+)
+
+Select emp_id, Name, Dept_id , Salary from cte where dr = 1   --- 1. per dept max salary
+ 
+ ------pyspark code for same------
+ 
+ from pyspark.sql.function import col , Windows 
+ 
+ windows_spec = Windows.partition_by(col('dept_id')).orderBy(desc(col('Salary')))
+ 
+ df_dr = df.withColumn("Max_salry_rank",dense_rank() over(windows_spec))
+ 
+ df_dr.select(col('emp_id'), col('Name'), col('Dept_id') ,col('Salary'))\
+			.filter(col("Max_salry_rank")==1)
+			
+			
+2. identify employees and dept having same salary
+--- sql----
+
+with cte as (
+Select  emp_id, Name, Dept_id , Salary , rank() over 
+			(partition by dept_id order by Salary desc) as r from Emp
+),
+cte1 as
+
+Select emp_id, Name, Dept_id , Salary from cte a join cte b where a.r = b.r and  a.Dept_id  = 
+ 
+ Select a.emp_id, b.emp_id , a.Name,b.Name,  a.Dept_id , a.Salary from EMP a  join EMP b 
+ on a.salary = b.salary and a.Dept_id  = b.Dept_id 
+ 
+ 
+ 

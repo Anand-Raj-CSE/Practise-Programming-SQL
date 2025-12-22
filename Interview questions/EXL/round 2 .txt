@@ -1,0 +1,10 @@
+Name rank
+a [1,1,1,3] 
+b [1,2,3,4]
+c [1,1,1,1,4]
+d [3]
+list of name of participants who has rank=1 most number of times
+
+import pyspark
+df_count_of_a  = df.groupBy(col("cust_id")).agg(count(col(ranked()),Int1).alias('count_of_a'))
+df_ans = dfdf_count_of_a.max(col('count_of_a'))
