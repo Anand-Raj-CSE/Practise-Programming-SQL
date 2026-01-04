@@ -62,3 +62,43 @@ Table: orders(order_id, customer_id, order_date, amount)
     (PARTITION BY customer_id order by order_date) as t from orders
  )
  Select customer_id,amount, min(order_date)  from cte where t > 10000 group by customer_id
+
+
+ ---------------------------------------- Organizational recursive CTE question-----------------------
+
+ with orgLvl as (
+    Select emp_id as Employee_id ,manager_id as Manager_emp_id , 
+    1 as lvl from emp 
+    where manager_id is NULL
+
+    UNION ALL
+
+    Select e.emp_id as Employee_id , o.Employee_id as Manager_emp_id , o.lvl+1 as lvl 
+    from emp e left join orgLvl o on e.manager_id = o.Employee_id
+ )
+
+ Select * from orgLvl where lvl <= 3
+
+-- We should use , inner join in case of recursive cte not left join , and sometimes it could go into infinite,
+-- loop so to prevent we could add a condition in recursive anchor query as well. So correct code for all 
+-- hierrachy till 3 is : 
+ with orgLvl as (
+    Select emp_id as Employee_id ,manager_id as Manager_emp_id , 
+    1 as lvl from emp 
+    where manager_id is NULL
+
+    UNION ALL
+
+    Select e.emp_id as Employee_id , e.manager_id as Manager_emp_id , o.lvl+1 as lvl 
+    from emp e join orgLvl o on e.manager_id = o.Employee_id where o.lvl < 3
+ )
+ Select * from orgLvl where lvl <= 3 order by lvl ,Employee_id, Manager_emp_id
+
+
+ -----------------runnig sum
+ with cte as (
+    Select cust_id , purchase_dt ,
+    sum(amt) over(PARTITION By cust_id order by purchase_dt) rows between unboundedPreceding and currentRow as running sum
+    from customer
+ )
+ Select * from cte

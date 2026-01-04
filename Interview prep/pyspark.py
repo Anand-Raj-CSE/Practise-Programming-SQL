@@ -118,3 +118,7 @@ Goal:
 Remove duplicate rows based on customer_id so that each customer appears only once.
 """
 df = orders.dropDuplicates(['customer_id'])
+
+# running sum in pyspark
+df=df.withColumn("running_sum",sum(col('amt')).over(Window.PartitionBy(col('cust_id')).orderBy(col('purchase_dt'))\
+                 .rows_between(Window.Unboundedpreceding,Window.currentRow)))
