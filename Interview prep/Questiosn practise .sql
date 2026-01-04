@@ -93,3 +93,12 @@ Table: orders(order_id, customer_id, order_date, amount)
     from emp e join orgLvl o on e.manager_id = o.Employee_id where o.lvl < 3
  )
  Select * from orgLvl where lvl <= 3 order by lvl ,Employee_id, Manager_emp_id
+
+
+ -----------------runnig sum
+ with cte as (
+    Select cust_id , purchase_dt ,
+    sum(amt) over(PARTITION By cust_id order by purchase_dt) rows between unboundedPreceding and currentRow as running sum
+    from customer
+ )
+ Select * from cte
