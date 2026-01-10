@@ -1,0 +1,62 @@
+id, salary , duplicate id , find duplicate
+--
+from pyspark.sql.functions import *
+df = df.groupBy(col("id")).agg(count(col("salary ")).alias("Salary_count")).filter("Salary_count")>1)
+
+--- Windows function
+window_spec = Windows.partionBy('id').orderBy('Salary')
+df = df.withColumn("Duplicate_col",dense_rank().over(window_spec))
+display(df.select('id').filter(col("Duplicate_col"))>1)
+
+
+
+------------------SQL
+-- Online SQL Editor to Run SQL Online.
+-- Use the editor to create new tables, insert data and all other SQL operations.
+  
+--SELECT first_name, age
+--FROM Customers;
+---id,salry , 101 - 10000 ,  nth highest salary  , 0
+--create table emp(id INT , Salary INT)
+
+--INSERT INTO emp values(1,10000)
+--INSERT INTO emp values(2,20000)
+--INSERT INTO emp values(3,40000)
+--INSERT INTO emp values(4,50000)
+--INSERT INTO emp values(5,30000)
+--INSERT INTO emp values(6,35000)
+--INSERT INTO emp values(7,41000)
+--INSERT INTO emp values(8,85000)
+--Select * from emp
+
+--query for highest salary
+with hig_sal as (
+Select id, salary , dense_rank() over(order by Salary desc) as dr from emp
+)
+
+Select id, salary,
+CASE WHEN dr in (Select dr from hig_sal) then dr 
+WHEN dr not in (Select dr from hig_sal) then 0
+END as salary_rank
+from hig_sal where dr = 9
+
+------------------------Python
+# Online Python compiler (interpreter) to run Python online.
+# Write Python 3 code in this online editor and run it.
+# print("Try programiz.pro")
+l1 = [1,2,3,4,5] 
+l2 = [3,4,7,8,9]
+# Identify duplicate 
+# l1 not in l2
+duplicate = [] 
+for i in l1:
+    if i in l2 :
+        duplicate.append(i)
+
+not_in_l1 = []
+for i in l1:
+    if i not in l2:
+        not_in_l1.append(i)
+        
+print(duplicate)
+print(not_in_l1)
