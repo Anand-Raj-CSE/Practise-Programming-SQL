@@ -1,0 +1,50 @@
+100 tables in source - ADLS - bronze
+df = spark.load.options('format','deltatable').parquet('//abfss:container@storage.core.windows.net/folder/100tables') -- blob 
+
+%sql
+create table master ()
+
+---insert---
+insert into master (Select * from table 1)
+insert into master (Select * from table 2)
+insert into master (Select * from table 3)
+.
+..
+..
+...
+insert into master (Select * from table 100)
+----add config in postres ----- for each loop in adf
+
+---pyspark for 
+Sales dataset - region , salesperson, sales_amount
+1. total sales per salesperson per region
+2. rank them within their region based on total sales
+ 
+3. return only top salesperson per region
+
+from pyspark.sql.function import * 
+window_spec = Window.partitionBy(col('salesperson')).orderBy('region')
+df = df.withColumn('ttl_sales_per_region', sum(sales_amount).over(window_spec))
+
+
+df = df.withColumn("rank_per_region",dense_rank().over(window_spec order by col('ttl_sales_per_region').desc))
+
+display(df.filter(col("rank_per_region")==1))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
