@@ -1,0 +1,57 @@
+--------SQL----
+
+
+
+Given an array arr[] of n integers, construct a product array res[]
+ (of the same size) such that res[i] is equal to the product of all the elements of arr[] except arr[i]. 
+Example: 
+Input: arr[] = [10, 3, 5, 6, 2]
+Output: [180, 600, 360, 300, 900]
+Explanation:
+For i=0, res[i] = 3 * 5 * 6 * 2 is 180.
+For i = 1, res[i] = 10 * 5 * 6 * 2 is 600.
+For i = 2, res[i] = 10 * 3 * 6 * 2 is 360.
+For i = 3, res[i] = 10 * 3 * 5 * 2 is 300.
+For i = 4, res[i] = 10 * 3 * 5 * 6 is 900.
+Input: arr[] = [12, 0]
+Output: [0, 12]
+Explanation:
+For i = 0, res[i] = 0.
+For i = 1, res[i] = 12.
+
+def get_prod_excluding(l):
+	n= len(l)
+	ans=[]
+	for i in range(n):
+		small_ans=1
+		for j in range(0,n):
+			if i==j:
+				continue
+			else:
+				small_ans *= l[j]
+		ans.append(small_ans)
+	return ans
+
+
+arr[] = [10, 3, 5, 6, 2]
+print(get_prod_excluding(arr))
+
+
+------------------------
+You are given a table matches that records the outcome of various sports games. 
+The table has three columns: team_a, team_b, and the winner of that match. 
+Both team_a and team_b columns will always contain the name found in the winner column (there are no draws or ties). 
+Task: Write an SQL query to generate a results table that lists every unique team and their total matches played, total wins, and total losses- 
+
+SQL:
+
+Select sum(case when team in team_a or team_b then 1 else 0 end) as played 
+
+
+from matches group by 
+
+
+
+ 
+ 
+ 
